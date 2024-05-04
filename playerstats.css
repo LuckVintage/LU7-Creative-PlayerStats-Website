@@ -1,0 +1,242 @@
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    background-color: #f7f7f7;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    font-size: 32px;
+    color: #007bff;
+}
+
+h2 {
+    font-size: 24px;
+    color: #007bff;
+}
+
+h3 {
+    font-size: 20px;
+    color: #007bff;
+}
+
+p {
+    font-size: 16px;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin: 20px;
+}
+
+.navbar-brand {
+    font-size: 24px;
+}
+
+.navbar-logo {
+    color: #fff;
+    text-decoration: none;
+}
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-links a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+.navbar-links a:hover {
+    text-decoration: underline;
+}
+
+.navbar-toggle {
+    display: none;
+}
+
+.navbar-toggle-label {
+    font-size: 24px;
+    cursor: pointer;
+    display: none;
+}
+
+.container {
+    padding: 20px;
+}
+
+.player-image-box {
+    display: inline-block;
+    margin-top: 20px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #dfdcdc;
+}
+
+.main {
+    margin: 20px;
+}
+
+.navbar-links,
+.right-hand-bar {
+    box-sizing: border-box;
+}
+
+/* Media Query for Navbar Links on Smaller Screens */
+@media (max-width: 790px) {
+    .navbar-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        background-color: #007bff;
+        padding: 10px 20px;
+        width: 100%;
+    }
+
+    .navbar-toggle-label {
+        display: block;
+    }
+
+    .navbar-toggle:checked ~ .navbar-links {
+        display: flex;
+    }
+}
+
+footer {
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    margin-top: auto;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Playername Input Styles */
+.input-container {
+    margin-bottom: 20px;
+}
+
+.input-container label {
+    font-size: 18px;
+}
+
+.input-container input[type="text"] {
+    width: 300px;
+    padding: 8px;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.input-container button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.input-container button:hover {
+    background-color: #0056b3;
+}
+
+/* Player Stats Styles */
+#stats-container {
+    margin-top: 20px;
+}
+
+.stats-section {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.stats-section h2 {
+    font-size: 24px;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.stats-item {
+    margin-bottom: 10px;
+}
+
+.stats-item strong {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+/* Grid Layout for Main Statistics */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: auto;
+    grid-gap: 20px;
+}
+
+@media only screen and (min-width: 1200px) {
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.input-container button {
+    margin-top: 10px; /* Adjust as needed */
+}
+
+/* Mobile */
+.mobile .stats-grid {
+    grid-template-columns: repeat(1, 1fr) !important;
+}
+
+/* Grid Item */
+.stats-item {
+    background-color: #ccc;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.stats-item p {
+    margin: 0;
+    text-align: left;
+}
+
+/* Separate Styling for Misc Statistics */
+.misc-stats-section {
+    margin-top: 20px;
+}
+
+.misc-stats-section h2 {
+    font-size: 24px;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.misc-stats-item {
+    margin-bottom: 10px;
+}

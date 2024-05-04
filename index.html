@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>LU7 Creative Player Viewer</title>
+        <meta name="description" content="View LU7 Creative player statistics." />
+        <link rel="icon" type="image/png" href="https://cdn.luckvintage.com/LU7Logo2.png" />
+        <link rel="stylesheet" href="playerstats.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+            integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </head>
+    <body>
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <a href="#" class="navbar-logo">
+                    <img src="https://cdn.luckvintage.com/LU7Logo2.png" height="50px" width="50px" alt="LU7 Creative Logo" style="vertical-align: middle;" />
+                    LU7 Creative
+                </a>
+            </div>
+            <input type="checkbox" id="navbar-toggle" class="navbar-toggle" />
+            <label for="navbar-toggle" class="navbar-toggle-label"><i class="fas fa-bars"></i></label>
+            <div class="navbar-links">
+                <a href="https://apidocs.lu7creative.net/" target="_blank"><i class="fas fa-user"></i> API Documentation</a>
+                <a href="https://lu7creative.net/forum/" target="_blank"><i class="fa-solid fa-comment"></i> Forum</a>
+                <a href="https://discord.gg/XNxJMWfPtf" target="_blank"><i class="fa-brands fa-discord"></i> Discord</a>
+                <a href="https://lu7creative.net/" target="_blank"><i class="fas fa-globe"></i> Main Website</a>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="main">
+                <center>
+                    <h1>LU7 Creative Player Viewer:</h1>
+                    <div class="input-container">
+                        <label for="playername">Enter Player Name:</label>
+                        <input type="text" id="playername" name="playername" onkeydown="if (event.key === 'Enter') getPlayerStats()" />
+                        <button onclick="getPlayerStats()"><i class="fas fa-chart-bar"></i> Get Stats</button>
+                        <button id="shareButton" onclick="shareStats()" style="display: none;"><i class="fas fa-share"></i> Share</button>
+                    </div>
+                    <div id="player-image-container" class="player-image-box"></div>
+                </center>
+                <div id="stats-container" class="stats-grid"></div>
+
+                <div class="misc-stats">
+                    <div class="misc-stats-section">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2024 LU7 Creative. All rights reserved.</p>
+                <a href="#" class="back-to-top"><i class="fas fa-chevron-up"></i></a>
+            </div>
+        </footer>
+        <script src="playerstats.js"></script>
+    </body>
+</html>
