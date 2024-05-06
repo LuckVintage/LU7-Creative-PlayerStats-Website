@@ -188,6 +188,7 @@ footer p {
 
 .stats-item {
     margin-bottom: 10px;
+    text-align: center;
 }
 
 .stats-item strong {
@@ -233,19 +234,4 @@ footer p {
 .stats-item p {
     margin: 0;
     text-align: left;
-}
-
-/* Separate Styling for Misc Statistics */
-.misc-stats-section {
-    margin-top: 20px;
-}
-
-.misc-stats-section h2 {
-    font-size: 24px;
-    color: #007bff;
-    margin-bottom: 10px;
-}
-
-.misc-stats-item {
-    margin-bottom: 10px;
 }
