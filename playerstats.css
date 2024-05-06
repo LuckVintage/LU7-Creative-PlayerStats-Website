@@ -52,16 +52,24 @@ p {
 .navbar-links {
     display: flex;
     align-items: center;
+    white-space: nowrap;
 }
 
 .navbar-links a {
-    color: #fff;
+    color: #007bff;
     text-decoration: none;
-    margin-left: 20px;
+    padding: 8px 16px;
+    border: 2px solid #007bff;
+    border-radius: 20px; 
+    background-color: #fff; 
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s; 
+    margin-right: 10px; 
 }
 
 .navbar-links a:hover {
-    text-decoration: underline;
+    background-color: #007bff;
+    border-color: #fff;
+    color: #fff;
 }
 
 .navbar-toggle {
@@ -96,7 +104,7 @@ p {
 }
 
 /* Media Query for Navbar Links on Smaller Screens */
-@media (max-width: 790px) {
+@media (max-width: 890px) {
     .navbar-links {
         display: none;
         flex-direction: column;
@@ -142,6 +150,7 @@ footer p {
     padding: 8px;
     font-size: 16px;
     margin-right: 10px;
+    border-radius: 20px;
 }
 
 .input-container button {
@@ -194,7 +203,7 @@ footer p {
 /* Grid Layout for Main Statistics */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr); /* Changed to single column for mobile */
     grid-auto-rows: auto;
     grid-gap: 20px;
 }
