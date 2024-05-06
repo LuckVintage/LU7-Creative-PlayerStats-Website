@@ -31,8 +31,13 @@ async function getPlayerStats() {
         if (response.ok) {
             displayStats(data);
             displayPlayerImage(data.uuid, data.name); // Pass playerName to displayPlayerImage
+
+            // Update meta tags
+            updateMetaTags(data.name, data.uuid);
+
             // Show share button if stats are displayed
             document.getElementById("shareButton").style.display = "inline-block";
+            document.getElementById("resetButton").style.display = "inline-block";
         } else {
             throw new Error(data.error.message);
         }
@@ -41,6 +46,18 @@ async function getPlayerStats() {
     }
 }
 
+function updateMetaTags(playerName, playerUUID) {
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    metaDescription.setAttribute("content", `View LU7 Creative player statistics for ${playerName}.`);
+
+    // Update meta title
+    document.title = `LU7 Creative - Player statistics for ${playerName}`;
+
+    // Update meta image
+    const metaImage = document.querySelector('meta[property="og:image"]');
+    metaImage.setAttribute("content", `https://cravatar.eu/helmavatar/${playerUUID}/128.png`);
+}
 async function displayPlayerImage(playerUUID, playerName) {
     // Constructing URL for the player's image
     const playerImageURL = `https://cravatar.eu/helmavatar/${playerUUID}/128.png`;
@@ -53,6 +70,7 @@ async function displayPlayerImage(playerUUID, playerName) {
     // Adding the image element to the player image container
     const playerImageContainer = document.getElementById("player-image-container");
     playerImageContainer.innerHTML = "";
+    playerImageContainer.style.display = "inline-block";
     playerImageContainer.appendChild(playerImageElement);
 
     // Adding the player's name to the player image box
@@ -62,7 +80,7 @@ async function displayPlayerImage(playerUUID, playerName) {
     } else {
         const playerImageBox = document.querySelector(".player-image-box");
         const playerNameElement = document.createElement("h2");
-        playerNameElement.innerHTML = `<i class="fas fa-user"></i> Player Information: ${playerName}`;// Set new player name
+        playerNameElement.innerHTML = `<i class="fas fa-user"></i> Player Information: ${playerName}`; // Set new player name
         playerImageBox.appendChild(playerNameElement);
     }
 
@@ -293,6 +311,34 @@ function shareStats() {
             });
         }
     );
+}
+
+function resetStats() {
+    // Clear player name input field
+    document.getElementById("playername").value = "";
+
+    // Clear stats container
+    document.getElementById("stats-container").innerHTML = "";
+
+    // Clear player image container
+    document.getElementById("player-image-container").style.display = "none";
+
+    // Hide share button
+    document.getElementById("shareButton").style.display = "none";
+
+    // Hide reset button
+    document.getElementById("resetButton").style.display = "none";
+
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    metaDescription.setAttribute("content", `View LU7 Creative player statistics.`);
+
+    // Update meta title
+    document.title = `LU7 Creative - Player Stats Viewer`;
+
+    // Update meta image
+    const metaImage = document.querySelector('meta[property="og:image"]');
+    metaImage.setAttribute("content", `https://cdn.luckvintage.com/LU7Logo2.png`);
 }
 
 // Automatically fetch stats if player name is present in the URL
