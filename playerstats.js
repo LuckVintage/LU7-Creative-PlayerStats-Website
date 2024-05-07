@@ -30,7 +30,7 @@ async function getPlayerStats() {
 
         if (response.ok) {
             displayStats(data);
-            displayPlayerImage(data.uuid, data.name); // Pass playerName to displayPlayerImage
+            displayPlayerImage(data.uuid, data.name, data.lastOnlineTimestamp, data.firstJoinedTimestamp);
 
             // Update meta tags
             updateMetaTags(data.name, data.uuid);
@@ -58,7 +58,8 @@ function updateMetaTags(playerName, playerUUID) {
     const metaImage = document.querySelector('meta[property="og:image"]');
     metaImage.setAttribute("content", `https://cravatar.eu/helmavatar/${playerUUID}/128.png`);
 }
-async function displayPlayerImage(playerUUID, playerName) {
+
+async function displayPlayerImage(playerUUID, playerName, lastOnlineTimestamp, firstJoinedTimestamp) {
     // Constructing URL for the player's image
     const playerImageURL = `https://cravatar.eu/helmavatar/${playerUUID}/128.png`;
 
@@ -83,6 +84,24 @@ async function displayPlayerImage(playerUUID, playerName) {
         playerNameElement.innerHTML = `<i class="fas fa-user"></i> Player Information: ${playerName}`; // Set new player name
         playerImageBox.appendChild(playerNameElement);
     }
+
+    // Convert milliseconds to human-readable date formats
+    const firstJoinedDate = new Date(firstJoinedTimestamp).toLocaleDateString();
+    const firstJoinedTime = new Date(firstJoinedTimestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+    // Adding last online timestamp if available
+    let lastOnlineContent = '<span style="background-color: #7FFF7F; padding: 5px; border-radius: 7px;"><i class="fas fa-circle" style="color: green;"></i><span style="color: #000;"> Currently Online</span></span>';
+    if (lastOnlineTimestamp) {
+        const lastOnlineDate = new Date(lastOnlineTimestamp).toLocaleDateString();
+        const lastOnlineTime = new Date(lastOnlineTimestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        lastOnlineContent = `<span style="background-color: #FF7F7F; padding: 5px; border-radius: 7px;"><i class="fas fa-clock"></i> Last Online: ${lastOnlineDate}, ${lastOnlineTime}</span>`;
+    }
+
+    // Adding first joined timestamp
+    const playerTimestampsElement = document.createElement("div");
+    playerTimestampsElement.className = "player-timestamps";
+    playerTimestampsElement.innerHTML = `${lastOnlineContent}<p><i class="fas fa-clock"></i> First Joined: ${firstJoinedDate}, ${firstJoinedTime}</p>`;
+    playerImageContainer.appendChild(playerTimestampsElement);
 
     // Adding styles for the player image box
     const playerImageBox = document.querySelector(".player-image-box");
@@ -196,7 +215,7 @@ function displayStats(stats) {
 
     // Loop through stats object
     for (const key in stats) {
-        if (stats.hasOwnProperty(key)) {
+        if (stats.hasOwnProperty(key) && key !== "lastOnlineTimestamp" && key !== "firstJoinedTimestamp") {
             const statValue = stats[key];
             const translatedKey = statTranslations[key] || key; // Use translated key if available, otherwise use original key
 
