@@ -47,6 +47,16 @@
                         <button id="shareButton" onclick="shareStats()" style="display: none;"><i class="fas fa-share"></i> Share</button>
                         <button id="resetButton" onclick="resetStats()" style="display: none;"><i class="fas fa-refresh"></i> Reset</button>
                     </div>
+                    <div id="loading-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); z-index: 9999;">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                            <div class="spinner">
+                                <div class="double-bounce1"></div>
+                                <div class="double-bounce2"></div>
+                            </div>
+                            <p style="font-size: 1.5rem; margin-top: 1rem;">Gathering data...</p>
+                        </div>
+                    </div>
+
                     <div id="player-image-container" class="player-image-box"></div>
                 </center>
                 <div id="stats-container" class="stats-grid"></div>
