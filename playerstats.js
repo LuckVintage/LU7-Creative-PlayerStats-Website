@@ -1,4 +1,6 @@
 async function getPlayerStats() {
+    // Display loading screen
+    document.getElementById("loading-screen").style.display = "block";
     const playerName = document.getElementById("playername").value;
 
     // Check if playerName is empty
@@ -27,10 +29,12 @@ async function getPlayerStats() {
     try {
         const response = await fetch(apiUrl);
         const data = await response.json();
+        // Hide loading screen
+        document.getElementById("loading-screen").style.display = "none";
 
         if (response.ok) {
             displayStats(data);
-            displayPlayerImage(data.uuid, data.name, data.lastOnlineTimestamp, data.firstJoinedTimestamp);
+            displayPlayerImage(data.uuid, data.name, data.lastOnlineTimestamp, data.firstJoinedTimestamp, data.prefix);
 
             // Update meta tags
             updateMetaTags(data.name, data.uuid);
@@ -59,7 +63,7 @@ function updateMetaTags(playerName, playerUUID) {
     metaImage.setAttribute("content", `https://cravatar.eu/helmavatar/${playerUUID}/128.png`);
 }
 
-async function displayPlayerImage(playerUUID, playerName, lastOnlineTimestamp, firstJoinedTimestamp) {
+async function displayPlayerImage(playerUUID, playerName, lastOnlineTimestamp, firstJoinedTimestamp, prefix) {
     // Constructing URL for the player's image
     const playerImageURL = `https://cravatar.eu/helmavatar/${playerUUID}/128.png`;
 
@@ -77,11 +81,11 @@ async function displayPlayerImage(playerUUID, playerName, lastOnlineTimestamp, f
     // Adding the player's name to the player image box
     const playerNameElement = document.querySelector(".player-image-box h2");
     if (playerNameElement) {
-        playerNameElement.innerHTML = `<i class="fas fa-user"></i> Player Information: ${playerName}`;
+        playerNameElement.innerHTML = `<i class="fas fa-user"></i> [${prefix}]${playerName}`;
     } else {
         const playerImageBox = document.querySelector(".player-image-box");
         const playerNameElement = document.createElement("h2");
-        playerNameElement.innerHTML = `<i class="fas fa-user"></i> Player Information: ${playerName}`; // Set new player name
+        playerNameElement.innerHTML = `<i class="fas fa-user"></i> [${prefix}] ${playerName}`; // Set new player name
         playerImageBox.appendChild(playerNameElement);
     }
 
@@ -215,7 +219,7 @@ function displayStats(stats) {
 
     // Loop through stats object
     for (const key in stats) {
-        if (stats.hasOwnProperty(key) && key !== "lastOnlineTimestamp" && key !== "firstJoinedTimestamp") {
+        if (stats.hasOwnProperty(key) && key !== "lastOnlineTimestamp" && key !== "firstJoinedTimestamp" && key !== "prefix") {
             const statValue = stats[key];
             const translatedKey = statTranslations[key] || key; // Use translated key if available, otherwise use original key
 
