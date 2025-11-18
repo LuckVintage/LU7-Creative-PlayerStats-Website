@@ -1,45 +1,43 @@
 async function getPlayerStats() {
-    // Display loading screen
+
     document.getElementById("loading-screen").style.display = "block";
     const playerName = document.getElementById("playername").value;
 
-    // Check if playerName is empty
     if (playerName.trim() === "") {
-        // Show SweetAlert error message
+
         Swal.fire({
             icon: "error",
             title: "Oops...",
             text: "Please enter a player name.",
         });
-        return; // Stop further execution if playerName is empty
+        return; 
+
     }
 
-    // Check if playerName contains slashes
     if (playerName.includes("/")) {
-        // Show SweetAlert error message for invalid username
+
         Swal.fire({
             icon: "error",
             title: "Oops...",
             text: "Please enter a valid username.",
         });
-        return; // Stop further execution if playerName contains slashes
+        return; 
+
     }
     const apiUrl = `https://mcapi.lu7.io/player/${playerName}`;
 
     try {
         const response = await fetch(apiUrl);
         const data = await response.json();
-        // Hide loading screen
+
         document.getElementById("loading-screen").style.display = "none";
 
         if (response.ok) {
             displayStats(data);
             displayPlayerImage(data.uuid, data.name, data.lastOnlineTimestamp, data.firstJoinedTimestamp, data.prefix);
 
-            // Update meta tags
             updateMetaTags(data.name, data.uuid);
 
-            // Show share button if stats are displayed
             document.getElementById("shareButton").style.display = "inline-block";
             document.getElementById("resetButton").style.display = "inline-block";
         } else {
@@ -51,49 +49,43 @@ async function getPlayerStats() {
 }
 
 function updateMetaTags(playerName, playerUUID) {
-    // Update meta description
+
     const metaDescription = document.querySelector('meta[name="description"]');
     metaDescription.setAttribute("content", `View LU7 Creative player statistics for ${playerName}.`);
 
-    // Update meta title
     document.title = `LU7 Creative - Player statistics for ${playerName}`;
 
-    // Update meta image
     const metaImage = document.querySelector('meta[property="og:image"]');
     metaImage.setAttribute("content", `https://cravatar.eu/helmavatar/${playerUUID}/128.png`);
 }
 
 async function displayPlayerImage(playerUUID, playerName, lastOnlineTimestamp, firstJoinedTimestamp, prefix) {
-    // Constructing URL for the player's image
+
     const playerImageURL = `https://cravatar.eu/helmavatar/${playerUUID}/128.png`;
 
-    // Creating an image element
     const playerImageElement = document.createElement("img");
     playerImageElement.src = playerImageURL;
     playerImageElement.alt = "Player Image";
 
-    // Adding the image element to the player image container
     const playerImageContainer = document.getElementById("player-image-container");
     playerImageContainer.innerHTML = "";
     playerImageContainer.style.display = "inline-block";
     playerImageContainer.appendChild(playerImageElement);
 
-    // Adding the player's name to the player image box
     const playerNameElement = document.querySelector(".player-image-box h2");
     if (playerNameElement) {
         playerNameElement.innerHTML = `<i class="fas fa-user"></i> [${prefix}]${playerName}`;
     } else {
         const playerImageBox = document.querySelector(".player-image-box");
         const playerNameElement = document.createElement("h2");
-        playerNameElement.innerHTML = `<i class="fas fa-user"></i> [${prefix}] ${playerName}`; // Set new player name
+        playerNameElement.innerHTML = `<i class="fas fa-user"></i> [${prefix}] ${playerName}`; 
+
         playerImageBox.appendChild(playerNameElement);
     }
 
-    // Convert milliseconds to human-readable date formats
     const firstJoinedDate = new Date(firstJoinedTimestamp).toLocaleDateString();
     const firstJoinedTime = new Date(firstJoinedTimestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-    // Adding last online timestamp if available
     let lastOnlineContent = '<span style="background-color: #7FFF7F; padding: 5px; border-radius: 7px;"><i class="fas fa-circle" style="color: green;"></i><span style="color: #000;"> Currently Online</span></span>';
     if (lastOnlineTimestamp) {
         const lastOnlineDate = new Date(lastOnlineTimestamp).toLocaleDateString();
@@ -101,18 +93,63 @@ async function displayPlayerImage(playerUUID, playerName, lastOnlineTimestamp, f
         lastOnlineContent = `<span style="background-color: #FF7F7F; padding: 5px; border-radius: 7px;"><i class="fas fa-clock"></i> Last Online: ${lastOnlineDate}, ${lastOnlineTime}</span>`;
     }
 
-    // Adding first joined timestamp
     const playerTimestampsElement = document.createElement("div");
     playerTimestampsElement.className = "player-timestamps";
     playerTimestampsElement.innerHTML = `${lastOnlineContent}<p><i class="fas fa-clock"></i> First Joined: ${firstJoinedDate}, ${firstJoinedTime}</p>`;
     playerImageContainer.appendChild(playerTimestampsElement);
 
-    // Adding styles for the player image box
     const playerImageBox = document.querySelector(".player-image-box");
     playerImageBox.style.border = "1px solid #ccc";
     playerImageBox.style.padding = "10px";
-    playerImageBox.style.marginTop = "20px"; // Adjust margin as needed
+    playerImageBox.style.marginTop = "20px"; 
+
     playerImageBox.style.textAlign = "center";
+}
+
+function formatTimestamp(timestamp) {
+    if (timestamp === 0 || timestamp === '0' || timestamp === 'true' || timestamp === true) {
+        return "Permanent / Never Expires";
+    }
+
+    const ms = Number(timestamp);
+    if (isNaN(ms) || ms <= 0) {
+
+        return String(timestamp);
+    }
+
+    const date = new Date(ms);
+
+    return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}`;
+}
+
+function formatDistance(cmValue) {
+    if (typeof cmValue !== 'number' || isNaN(cmValue)) return cmValue;
+
+    const meters = cmValue / 100;
+
+    if (meters >= 1000) {
+        const kilometers = meters / 1000;
+        return `${kilometers.toLocaleString(undefined, { maximumFractionDigits: 2 })} KM`;
+    } else {
+        return `${meters.toLocaleString(undefined, { maximumFractionDigits: 2 })} M`;
+    }
+}
+
+function formatTimeTicks(ticksValue) {
+    if (typeof ticksValue !== 'number' || isNaN(ticksValue)) return ticksValue;
+
+    const seconds = Math.floor(ticksValue / 20);
+    const days = Math.floor(seconds / (3600 * 24));
+    const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+
+    let parts = [];
+    if (days > 0) parts.push(days + 'd');
+    if (hours > 0) parts.push(hours + 'h');
+
+    if (minutes > 0 || parts.length === 0) parts.push(minutes + 'm');
+
+    return parts.join(' ');
 }
 
 function displayStats(stats) {
@@ -212,96 +249,195 @@ function displayStats(stats) {
     };
 
     const statsContainer = document.getElementById("stats-container");
-    statsContainer.innerHTML = ""; // Clear previous stats
+    statsContainer.innerHTML = ""; 
 
-    // Define playerName variable
     const playerName = document.getElementById("playername").value;
+    const playerUUID = stats.uuid || ''; 
 
-    // Loop through stats object
-    for (const key in stats) {
-        if (stats.hasOwnProperty(key) && key !== "lastOnlineTimestamp" && key !== "firstJoinedTimestamp" && key !== "prefix") {
+    const generalStatsElement = document.createElement("div");
+    generalStatsElement.className = "stats-section";
+    generalStatsElement.innerHTML = "<h2><i class=\"fas fa-info-circle\"></i> General Information</h2>";
+
+    generalStatsElement.innerHTML += `<p style="margin-top: -10px; font-size: 0.9em;">This section displays basic account details and key top-level metrics.</p>`;
+
+    const generalStatKeys = ["name", "uuid", "online", "plotCount", "mysteryDust", "mysteryBoxes"];
+
+    generalStatKeys.forEach(key => {
+
+        if (stats.hasOwnProperty(key) && typeof stats[key] !== 'object') {
             const statValue = stats[key];
-            const translatedKey = statTranslations[key] || key; // Use translated key if available, otherwise use original key
+            const translatedKey = statTranslations[key] || key;
+            let formattedValue = statValue;
 
-            const statElement = document.createElement("div");
-            statElement.className = "stats-section";
+            if (typeof statValue === 'number' && key !== 'uuid') {
 
-            if (key === "plots") {
-                if (statValue.length === 0) {
-                    statElement.innerHTML = `<h2>${translatedKey}</h2><div class="stats-item"><i class="fas fa-times-circle"></i> ${playerName} hasn't claimed any plots yet.</div>`;
-                } else {
-                    statElement.innerHTML = `<h2>${translatedKey}</h2>`;
-                    statValue.forEach((item) => {
-                        const subStatElement = document.createElement("div");
-                        subStatElement.className = "stats-item";
-                        subStatElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${item.id}`;
-                        statElement.appendChild(subStatElement);
-                    });
-                }
-                statsContainer.appendChild(statElement);
-            } else if (key !== "activePunishments") {
-                if (typeof statValue === "object") {
-                    statElement.innerHTML = `<h2>${translatedKey}</h2>`;
-                    const subStats = Object.entries(statValue);
-                    subStats.forEach(([subKey, subValue]) => {
-                        const translatedSubKey = statTranslations[subKey] || subKey;
-                        const subStatElement = document.createElement("div");
-                        subStatElement.className = "stats-item";
-                        subStatElement.innerHTML = `<strong>${translatedSubKey}:</strong> ${subValue}`;
-                        statElement.appendChild(subStatElement);
-                    });
-                } else {
-                    statElement.innerHTML = `<div class="stats-item"><strong>${translatedKey}:</strong> ${statValue}</div>`;
-                }
-                statsContainer.appendChild(statElement);
+                formattedValue = statValue.toLocaleString();
+            } else if (typeof statValue === 'boolean') {
+
+                formattedValue = statValue ? 'Yes' : 'No';
             }
+
+            const subStatElement = document.createElement("div");
+            subStatElement.className = "stats-item";
+            subStatElement.innerHTML = `<strong>${translatedKey}:</strong> ${formattedValue}`;
+            generalStatsElement.appendChild(subStatElement);
         }
+    });
+
+    statsContainer.appendChild(generalStatsElement);
+
+    const dynmapBaseUrl = "https://dynmap.lu7creative.net/";
+
+    const plotsSection = document.createElement("div");
+    plotsSection.className = "stats-section";
+    const translatedPlotsKey = statTranslations["plots"] || "Plots";
+    const plotStatValue = stats["plots"] || [];
+
+    if (plotStatValue.length === 0) {
+        plotsSection.innerHTML = `<h2>${translatedPlotsKey}</h2><div class="stats-item"><i class="fas fa-times-circle"></i> ${playerName} hasn't claimed any plots yet.</div>`;
+    } else {
+        plotsSection.innerHTML = `<h2>${translatedPlotsKey}</h2>`;
+
+        plotsSection.innerHTML += `
+            <p style="margin-top: -10px; font-size: 0.9em;">
+                <a href="${dynmapBaseUrl}" target="_blank" style="font-weight: bold;"><i class="fas fa-external-link-alt"></i> View LU7 Creative Dynmap</a>
+                <br>
+                To find a plot, expand the markers section on Dynmap and search for the ID in the 'LU7 Creative Plots' section.
+            </p>
+        `;
+
+        plotStatValue.forEach((item) => {
+            const subStatElement = document.createElement("div");
+            subStatElement.className = "stats-item";
+
+            let plotID = item.id;
+
+            plotID = plotID.replace(/;/g, ',');
+
+            subStatElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${plotID}`;
+            plotsSection.appendChild(subStatElement);
+        });
     }
+    statsContainer.appendChild(plotsSection);
 
-    // Check if activePunishments is present in the API response
+    const bansBaseUrl = "https://bans.lu7creative.net/";
+
     const hasActivePunishments = "activePunishments" in stats;
-
-    // Add activePunishments section if it's present, or create an empty array if it's absent
     const activePunishments = hasActivePunishments ? stats.activePunishments : [];
 
-    // Create stats section for activePunishments
     const activePunishmentsElement = document.createElement("div");
     activePunishmentsElement.className = "stats-section";
-
-    // Display activePunishments section header
     activePunishmentsElement.innerHTML = "<h2><i class='fas fa-hammer'></i> Active Punishments:</h2>";
 
-    // Display activePunishments or a message if there are no active punishments
+    activePunishmentsElement.innerHTML += `<p style="margin-top: -10px; font-size: 0.9em;">This section details any currently active bans, mutes and warnings applied to the player.</p>`;
+
+    if (playerUUID) {
+        const historyLink = `${bansBaseUrl}history.php?uuid=${playerUUID}`;
+        activePunishmentsElement.innerHTML += `
+            <p style="font-size: 0.9em;">
+                <a href="${historyLink}" target="_blank" style="font-weight: bold;"><i class="fas fa-history"></i> View Full Punishment History</a>
+                <br>
+                Click any listed punishment ID below to view specific case details.
+            </p>
+        `;
+    }
+
     if (activePunishments.length === 0) {
         activePunishmentsElement.innerHTML += `<div class="stats-item"><i class="fas fa-check-circle"></i> ${playerName} has no active punishments.</div>`;
     } else {
-        // Loop through activePunishments and display each punishment
+
         activePunishments.forEach((punishment) => {
             const subStatElement = document.createElement("div");
             subStatElement.className = "stats-item";
 
-            // Display each punishment's details
+            const punishmentID = punishment.id;
+
+            const punishmentType = punishment.type.toLowerCase(); 
+            const punishmentExecutor = punishment.executorName || 'N/A';
+
+            const infoLink = `${bansBaseUrl}info.php?type=${punishmentType}&id=${punishmentID}`;
+
+            subStatElement.innerHTML = `
+                <p style="font-size: 1.1em; margin-bottom: 5px;">
+                    <strong><a href="${infoLink}" target="_blank" title="View Punishment Details" style="text-decoration: none; color: #007bff;"><i class="fas fa-gavel"></i> Punishment ID: ${punishmentID} (${punishment.type})</a></strong>
+                </p>
+            `;
+
             Object.entries(punishment).forEach(([punishmentKey, punishmentValue]) => {
                 const translatedPunishmentKey = statTranslations[punishmentKey] || punishmentKey;
-                subStatElement.innerHTML += `<strong>${translatedPunishmentKey}:</strong> ${punishmentValue}<br>`;
+                let formattedValue = punishmentValue;
+
+                if (punishmentKey === 'id' || punishmentKey === 'type') {
+                    return; 
+                }
+
+                if (punishmentKey === 'dateStart' || punishmentKey === 'dateEnd') {
+                    formattedValue = formatTimestamp(punishmentValue);
+                } else if (punishmentKey === 'isPermanent' || punishmentKey === 'active') {
+
+                    formattedValue = punishmentValue === true ? 'Yes' : 'No';
+                }
+
+                subStatElement.innerHTML += `<strong>${translatedPunishmentKey}:</strong> ${formattedValue}<br>`;
             });
 
             activePunishmentsElement.appendChild(subStatElement);
         });
     }
+    statsContainer.appendChild(activePunishmentsElement);
 
-    // Append activePunishments section to statsContainer, next to the plots section
-    const plotsSection = document.querySelector(".stats-section h2:first-of-type");
-    if (plotsSection) {
-        statsContainer.insertBefore(activePunishmentsElement, plotsSection.parentNode.nextSibling);
-    } else {
-        // If plots section not found, append activePunishments section to the end
-        statsContainer.appendChild(activePunishmentsElement);
+    const miscStats = stats["statistics"];
+
+    const distanceKeys = [
+        'WALK_ON_WATER_ONE_CM', 'SWIM_ONE_CM', 'CROUCH_ONE_CM', 'STRIDER_ONE_CM', 
+        'FLY_ONE_CM', 'AVIATE_ONE_CM', 'FALL_ONE_CM', 'WALK_UNDER_WATER_ONE_CM', 
+        'MINECART_ONE_CM', 'CLIMB_ONE_CM', 'SPRINT_ONE_CM', 'HORSE_ONE_CM', 
+        'PIG_ONE_CM', 'BOAT_ONE_CM', 'WALK_ONE_CM'
+    ];
+
+    const timeKeys = [
+        'PLAY_ONE_MINUTE', 'SNEAK_TIME', 'TIME_SINCE_DEATH', 'TOTAL_WORLD_TIME', 
+        'TIME_SINCE_REST'
+    ];
+
+    if (miscStats && typeof miscStats === "object") {
+        const miscStatsElement = document.createElement("div");
+
+        miscStatsElement.className = "stats-section misc-stats-section"; 
+        const translatedMiscKey = statTranslations["statistics"] || "Misc Statistics:";
+        miscStatsElement.innerHTML = `<h2>${translatedMiscKey}</h2>`;
+
+        const miscStatsGrid = document.createElement("div");
+
+        miscStatsGrid.className = "misc-stats-grid"; 
+
+        const subStats = Object.entries(miscStats);
+        subStats.forEach(([subKey, subValue]) => {
+            let formattedValue = subValue;
+
+            if (distanceKeys.includes(subKey)) {
+                formattedValue = formatDistance(subValue);
+            } else if (timeKeys.includes(subKey)) {
+                formattedValue = formatTimeTicks(subValue);
+            } else if (typeof subValue === 'number') {
+
+                formattedValue = subValue.toLocaleString();
+            }
+
+            const translatedSubKey = statTranslations[subKey] || subKey;
+            const subStatElement = document.createElement("div");
+            subStatElement.className = "stats-item";
+            subStatElement.innerHTML = `<strong>${translatedSubKey}:</strong> ${formattedValue}`;
+            miscStatsGrid.appendChild(subStatElement);
+        });
+
+        miscStatsElement.appendChild(miscStatsGrid);
+        statsContainer.appendChild(miscStatsElement);
     }
 }
 
 function displayError(message) {
-    // Show SweetAlert error message
+
     Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -313,10 +449,9 @@ function shareStats() {
     const playerName = document.getElementById("playername").value;
     const shareUrl = `${window.location.origin}${window.location.pathname}?playername=${playerName}`;
 
-    // Copy URL to clipboard
     navigator.clipboard.writeText(shareUrl).then(
         function () {
-            // Show SweetAlert success message
+
             Swal.fire({
                 icon: "success",
                 title: "URL Copied!",
@@ -326,7 +461,7 @@ function shareStats() {
             });
         },
         function (err) {
-            // Show SweetAlert error message if copying fails
+
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
@@ -337,39 +472,33 @@ function shareStats() {
 }
 
 function resetStats() {
-    // Clear player name input field
+
     document.getElementById("playername").value = "";
 
-    // Clear stats container
     document.getElementById("stats-container").innerHTML = "";
 
-    // Clear player image container
     document.getElementById("player-image-container").style.display = "none";
 
-    // Hide share button
     document.getElementById("shareButton").style.display = "none";
 
-    // Hide reset button
     document.getElementById("resetButton").style.display = "none";
 
-    // Update meta description
     const metaDescription = document.querySelector('meta[name="description"]');
     metaDescription.setAttribute("content", `View LU7 Creative player statistics.`);
 
-    // Update meta title
     document.title = `LU7 Creative - Player Stats Viewer`;
 
-    // Update meta image
     const metaImage = document.querySelector('meta[property="og:image"]');
     metaImage.setAttribute("content", `https://cdn.luckvintage.com/LU7Logo2.png`);
 }
 
-// Automatically fetch stats if player name is present in the URL
 window.onload = function () {
     const urlParams = new URLSearchParams(window.location.search);
     const urlPlayerName = urlParams.get("playername");
     if (urlPlayerName) {
-        document.getElementById("playername").value = urlPlayerName; // Update input field
-        getPlayerStats(); // Fetch stats
+        document.getElementById("playername").value = urlPlayerName; 
+
+        getPlayerStats(); 
+
     }
 };
