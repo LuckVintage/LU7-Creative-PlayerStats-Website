@@ -28,7 +28,6 @@ p {
     font-size: 16px;
 }
 
-/* Navbar Styles */
 .navbar {
     background-color: #007bff;
     color: #fff;
@@ -55,7 +54,8 @@ p {
     white-space: nowrap;
 }
 
-.navbar-links a {
+.navbar-links a,
+.navbar-links a:visited { 
     color: #007bff;
     text-decoration: none;
     padding: 8px 16px;
@@ -103,7 +103,6 @@ p {
     box-sizing: border-box;
 }
 
-/* Media Query for Navbar Links on Smaller Screens */
 @media (max-width: 890px) {
     .navbar-links {
         display: none;
@@ -136,7 +135,6 @@ footer p {
     margin: 0;
 }
 
-/* Playername Input Styles */
 .input-container {
     margin-bottom: 20px;
 }
@@ -167,7 +165,6 @@ footer p {
     background-color: #0056b3;
 }
 
-/* Player Stats Styles */
 #stats-container {
     margin-top: 20px;
 }
@@ -188,7 +185,6 @@ footer p {
 
 .stats-item {
     margin-bottom: 10px;
-    text-align: center;
 }
 
 .stats-item strong {
@@ -201,10 +197,17 @@ footer p {
     font-weight: bold;
 }
 
-/* Grid Layout for Main Statistics */
+a:visited {
+    color: #007bff;
+}
+
+.stats-section a:visited { 
+    color: #007bff !important; 
+}
+
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(1, 1fr); /* Changed to single column for mobile */
+    grid-template-columns: repeat(1, 1fr); 
     grid-auto-rows: auto;
     grid-gap: 20px;
 }
@@ -216,15 +219,47 @@ footer p {
 }
 
 .input-container button {
-    margin-top: 10px; /* Adjust as needed */
+    margin-top: 10px; 
 }
 
-/* Mobile */
 .mobile .stats-grid {
     grid-template-columns: repeat(1, 1fr) !important;
 }
 
-/* Grid Item */
+.misc-stats-section {
+    grid-column: 1 / -1; 
+}
+
+.misc-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); 
+    grid-auto-rows: auto;
+    grid-gap: 10px;
+    padding-top: 10px;
+}
+
+.misc-stats-grid .stats-item {
+    margin-bottom: 0;
+}
+
+@media only screen and (min-width: 768px) {
+    .misc-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .misc-stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media only screen and (min-width: 1400px) {
+    .misc-stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
 .stats-item {
     background-color: #ccc;
     border-radius: 5px;
