@@ -66,6 +66,7 @@ async function displayPlayerImage(playerUUID, playerName, lastOnlineTimestamp, f
     const playerImageElement = document.createElement("img");
     playerImageElement.src = playerImageURL;
     playerImageElement.alt = "Player Image";
+    playerImageElement.className = "player-helm-avatar"; 
 
     const playerImageContainer = document.getElementById("player-image-container");
     playerImageContainer.innerHTML = "";
@@ -86,11 +87,11 @@ async function displayPlayerImage(playerUUID, playerName, lastOnlineTimestamp, f
     const firstJoinedDate = new Date(firstJoinedTimestamp).toLocaleDateString();
     const firstJoinedTime = new Date(firstJoinedTimestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-    let lastOnlineContent = '<span style="background-color: #7FFF7F; padding: 5px; border-radius: 7px;"><i class="fas fa-circle" style="color: green;"></i><span style="color: #000;"> Currently Online</span></span>';
+    let lastOnlineContent = '<span class="online-status"><i class="fas fa-circle"></i> Currently Online</span>';
     if (lastOnlineTimestamp) {
         const lastOnlineDate = new Date(lastOnlineTimestamp).toLocaleDateString();
         const lastOnlineTime = new Date(lastOnlineTimestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-        lastOnlineContent = `<span style="background-color: #FF7F7F; padding: 5px; border-radius: 7px;"><i class="fas fa-clock"></i> Last Online: ${lastOnlineDate}, ${lastOnlineTime}</span>`;
+        lastOnlineContent = `<span class="offline-status"><i class="fas fa-clock"></i> Last Online: ${lastOnlineDate}, ${lastOnlineTime}</span>`;
     }
 
     const playerTimestampsElement = document.createElement("div");
@@ -98,12 +99,6 @@ async function displayPlayerImage(playerUUID, playerName, lastOnlineTimestamp, f
     playerTimestampsElement.innerHTML = `${lastOnlineContent}<p><i class="fas fa-clock"></i> First Joined: ${firstJoinedDate}, ${firstJoinedTime}</p>`;
     playerImageContainer.appendChild(playerTimestampsElement);
 
-    const playerImageBox = document.querySelector(".player-image-box");
-    playerImageBox.style.border = "1px solid #ccc";
-    playerImageBox.style.padding = "10px";
-    playerImageBox.style.marginTop = "20px"; 
-
-    playerImageBox.style.textAlign = "center";
 }
 
 function formatTimestamp(timestamp) {
@@ -155,6 +150,7 @@ function formatTimeTicks(ticksValue) {
 function displayStats(stats) {
     const statTranslations = {
         mysteryBoxes: '<i class="fas fa-box"></i> Mystery Boxes',
+        prefix: '<i class="fas fa-crown"></i> Prefix',
         mysteryDust: '<i class="fas fa-seedling"></i> Mystery Dust',
         plotCount: '<i class="fas fa-map"></i> Plot Count',
         name: '<i class="fas fa-user"></i> Player Name',
@@ -258,9 +254,9 @@ function displayStats(stats) {
     generalStatsElement.className = "stats-section";
     generalStatsElement.innerHTML = "<h2><i class=\"fas fa-info-circle\"></i> General Information</h2>";
 
-    generalStatsElement.innerHTML += `<p style="margin-top: -10px; font-size: 0.9em;">This section displays basic account details and key top-level metrics.</p>`;
+    generalStatsElement.innerHTML += `<p style="margin-top: -10px; font-size: 0.9em;">This section displays basic account details.</p>`;
 
-    const generalStatKeys = ["name", "uuid", "online", "plotCount", "mysteryDust", "mysteryBoxes"];
+    const generalStatKeys = ["name", "uuid", "prefix", "online", "plotCount", "mysteryDust", "mysteryBoxes"];
 
     generalStatKeys.forEach(key => {
 
@@ -359,7 +355,7 @@ function displayStats(stats) {
 
             subStatElement.innerHTML = `
                 <p style="font-size: 1.1em; margin-bottom: 5px;">
-                    <strong><a href="${infoLink}" target="_blank" title="View Punishment Details" style="text-decoration: none; color: #007bff;"><i class="fas fa-gavel"></i> Punishment ID: ${punishmentID} (${punishment.type})</a></strong>
+                    <strong><a href="${infoLink}" target="_blank" title="View Punishment Details" style="text-decoration: none; color: #1e88e5;"><i class="fas fa-gavel"></i> Punishment ID: ${punishmentID} (${punishment.type})</a></strong>
                 </p>
             `;
 
